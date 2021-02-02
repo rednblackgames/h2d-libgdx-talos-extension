@@ -2,6 +2,8 @@ plugins {
     id 'java'
 }
 
+apply plugin: 'com.novoda.bintray-release'
+
 group 'games.rednblack'
 version '0.0.4'
 
@@ -9,6 +11,20 @@ repositories {
     jcenter()
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+}
+
+publish {
+    def groupProjectID = 'games.rednblack.editor'
+    def artifactProjectID = 'h2d-libgdx-talos-extension'
+    def publishVersionID = '0.0.4'
+
+    userOrg = 'rednblackgames'
+    repoName = 'HyperLap2D'
+    groupId = groupProjectID
+    artifactId = artifactProjectID
+    publishVersion = publishVersionID
+    desc = 'HyperLap2D Talos extension for libGDX runtime'
+    website = 'https://github.com/rednblackgames/HyperLap2D'
 }
 
 dependencies {
