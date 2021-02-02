@@ -17,6 +17,7 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
     implementation "com.badlogicgames.box2dlights:box2dlights:$box2dlightsVersion"
 
+    implementation "com.talosvfx:talos-libgdx:$talosVersion"
     implementation project(":hyperlap2d-runtime-libgdx")
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
