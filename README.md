@@ -25,10 +25,11 @@ dependencies {
 </dependency>
 ```
 
-**Spine Runtime compatibility**
+**Talos Runtime compatibility**
 
 | HyperLap2D         | Talos              |
 | ------------------ | ------------------ |
+| 0.0.5-dev          | 1.3.1              |
 | 0.0.4              | 1.3.1              |
 
 ### License
