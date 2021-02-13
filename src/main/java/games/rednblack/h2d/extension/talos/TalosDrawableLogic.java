@@ -9,6 +9,7 @@ import com.talosvfx.talos.runtime.IEmitter;
 import com.talosvfx.talos.runtime.Particle;
 import com.talosvfx.talos.runtime.ParticleEffectInstance;
 import com.talosvfx.talos.runtime.render.ParticleRenderer;
+import games.rednblack.editor.renderer.components.TintComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
 import games.rednblack.editor.renderer.components.particle.TalosDataComponent;
 import games.rednblack.editor.renderer.systems.render.logic.Drawable;
@@ -19,8 +20,9 @@ public class TalosDrawableLogic implements Drawable {
 
     private final ComponentMapper<TalosComponent> particleComponentMapper = ComponentMapper.getFor(TalosComponent.class);
     private final ComponentMapper<TalosDataComponent> dataComponentMapper = ComponentMapper.getFor(TalosDataComponent.class);
+    private final ComponentMapper<TintComponent> tintComponentComponentMapper = ComponentMapper.getFor(TintComponent.class);
     private final TalosRenderer defaultRenderer = new TalosRenderer();
-    private Color tmpColor = new Color();
+    private final Color tmpColor = new Color();
 
     public TalosDrawableLogic() {
 
@@ -30,7 +32,10 @@ public class TalosDrawableLogic implements Drawable {
     public void draw(Batch batch, Entity entity, float parentAlpha) {
         tmpColor.set(batch.getColor());
 
+        TintComponent tintComponent = tintComponentComponentMapper.get(entity);
+
         defaultRenderer.setBatch(batch);
+        defaultRenderer.setEntityColor(tintComponent.color, parentAlpha);
 
         TalosDataComponent dataComponent = dataComponentMapper.get(entity);
         TalosComponent talosComponent = particleComponentMapper.get(entity);
@@ -53,7 +58,7 @@ public class TalosDrawableLogic implements Drawable {
     }
 
     private static class TalosRenderer implements ParticleRenderer {
-
+        private final Color entityColor = new Color();
         private Batch batch;
 
         Color color = new Color(Color.WHITE);
@@ -67,6 +72,11 @@ public class TalosDrawableLogic implements Drawable {
 
         public void setBatch (Batch batch) {
             this.batch = batch;
+        }
+
+        public void setEntityColor(Color color, float parentAlpha) {
+            entityColor.set(color);
+            entityColor.a *= parentAlpha;
         }
 
         @Override
@@ -87,7 +97,7 @@ public class TalosDrawableLogic implements Drawable {
                 }
 
                 for (int j = 0; j < particleEmitter.getActiveParticleCount(); j++) {
-                    renderParticle(batch, particleEmitter.getActiveParticles().get(j), particleEffectInstance.alpha);
+                    renderParticle(batch, particleEmitter.getActiveParticles().get(j), particleEffectInstance.alpha * entityColor.a);
                 }
             }
 
@@ -96,6 +106,7 @@ public class TalosDrawableLogic implements Drawable {
 
         private void renderParticle (Batch batch, Particle particle, float parentAlpha) {
             color.set(particle.color);
+            color.mul(entityColor);
             color.mul(particle.getEmitter().getTint());
             color.a = particle.transparency * parentAlpha;
             batch.setColor(color);
