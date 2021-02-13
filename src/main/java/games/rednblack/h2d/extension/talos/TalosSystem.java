@@ -7,7 +7,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import games.rednblack.editor.renderer.components.particle.TalosDataComponent;
 
 public class TalosSystem extends IteratingSystem {
-    private final ComponentMapper<TalosComponent> particleComponentMapper = ComponentMapper.getFor(TalosComponent.class);
+    protected final ComponentMapper<TalosComponent> particleComponentMapper = ComponentMapper.getFor(TalosComponent.class);
 
     public TalosSystem() {
         super(Family.all(TalosComponent.class, TalosDataComponent.class).get());
