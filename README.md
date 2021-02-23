@@ -5,22 +5,23 @@ HyperLap2D extension for libgdx runtime that adds Talos rendering support.
 ### Integration
 
 #### Gradle
-Release artifacts are available through ![Bintray](https://img.shields.io/bintray/v/rednblackgames/HyperLap2D/h2d-libgdx-talos-extension) 
+![maven-central](https://img.shields.io/maven-central/v/games.rednblack.hyperlap2d/libgdx-talos-extension?color=blue&label=release)
+![sonatype-nexus](https://img.shields.io/nexus/s/games.rednblack.hyperlap2d/libgdx-talos-extension?label=sanapshot&server=https%3A%2F%2Foss.sonatype.org)
 
 Extension needs to be included into your `core` project.
 ```groovy
 dependencies {
     api "com.talosvfx:talos-libgdx:$talosVersion"
-    api "games.rednblack.editor:h2d-libgdx-talos-extension:$h2dTalosExtension"
+    api "games.rednblack.hyperlap2d:libgdx-talos-extension:$h2dTalosExtension"
 }
 ```
 
 #### Maven
 ```xml
 <dependency>
-  <groupId>games.rednblack.editor</groupId>
-  <artifactId>h2d-libgdx-talos-extension</artifactId>
-  <version>0.0.4</version>
+  <groupId>games.rednblack.hyperlap2d</groupId>
+  <artifactId>libgdx-talos-extension</artifactId>
+  <version>0.0.5</version>
   <type>pom</type>
 </dependency>
 ```
@@ -29,7 +30,7 @@ dependencies {
 
 | HyperLap2D         | Talos              |
 | ------------------ | ------------------ |
-| 0.0.5-dev          | 1.3.1              |
+| 0.0.5              | 1.3.1              |
 | 0.0.4              | 1.3.1              |
 
 ### License
