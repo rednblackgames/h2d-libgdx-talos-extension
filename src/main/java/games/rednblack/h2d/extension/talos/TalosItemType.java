@@ -1,10 +1,10 @@
 package games.rednblack.h2d.extension.talos;
 
-import box2dLight.RayHandler;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.physics.box2d.World;
+import games.rednblack.editor.renderer.box2dLight.RayHandler;
 import games.rednblack.editor.renderer.commons.IExternalItemType;
 import games.rednblack.editor.renderer.components.particle.TalosDataComponent;
 import games.rednblack.editor.renderer.factory.EntityFactory;

@@ -14,7 +14,6 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     implementation "com.badlogicgames.ashley:ashley:$ashleyVersion"
     implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-    implementation "com.badlogicgames.box2dlights:box2dlights:$box2dlightsVersion"
 
     implementation "com.talosvfx:talos-libgdx:$talosVersion"
     implementation project(":hyperlap2d-runtime-libgdx")
