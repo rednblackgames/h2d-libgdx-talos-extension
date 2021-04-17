@@ -11,6 +11,7 @@ import com.talosvfx.talos.runtime.ParticleEffectDescriptor;
 import com.talosvfx.talos.runtime.assets.AtlasAssetProvider;
 import com.talosvfx.talos.runtime.assets.BaseAssetProvider;
 import com.talosvfx.talos.runtime.utils.ShaderDescriptor;
+import com.talosvfx.talos.runtime.utils.VectorField;
 import games.rednblack.editor.renderer.box2dLight.RayHandler;
 import games.rednblack.editor.renderer.components.BoundingBoxComponent;
 import games.rednblack.editor.renderer.components.DimensionsComponent;
@@ -74,6 +75,12 @@ public class TalosComponentFactory extends ComponentFactory {
                 return findShaderDescriptorOnLoad(assetName);
             }
         });
+        assetProvider.setAssetHandler(VectorField.class, new BaseAssetProvider.AssetHandler<VectorField>() {
+            @Override
+            public VectorField findAsset(String assetName) {
+                return findVectorFieldDescriptorOnLoad(assetName);
+            }
+        });
 
         TalosComponent component = engine.createComponent(TalosComponent.class);
         ParticleEffectDescriptor effectDescriptor = new ParticleEffectDescriptor();
@@ -101,13 +108,26 @@ public class TalosComponentFactory extends ComponentFactory {
     private ShaderDescriptor findShaderDescriptorOnLoad (String assetName) {
         ShaderDescriptor asset = shaderDescriptorObjectMap.get(assetName);
         if (asset == null) {
-            //Look in all paths, and hopefully load the requested asset, or fail (crash)
             String path = talosToLoad.parent().path() + File.separator + assetName;
             final FileHandle file = Gdx.files.internal(path);
 
             asset = new ShaderDescriptor();
             if (file.exists()) {
                 asset.setData(file.readString());
+            }
+        }
+        return asset;
+    }
+
+    private ObjectMap<String, VectorField> vectorFieldDescriptorObjectMap = new ObjectMap<>();
+    private VectorField findVectorFieldDescriptorOnLoad (String assetName) {
+        VectorField asset = vectorFieldDescriptorObjectMap.get(assetName);
+        if (asset == null) {
+            final FileHandle file = new FileHandle(talosToLoad.parent().path() + File.separator + assetName + ".fga");
+
+            asset = new VectorField();
+            if (file.exists()) {
+                asset.setBakedData(file);
             }
         }
         return asset;
