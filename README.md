@@ -21,7 +21,7 @@ dependencies {
 <dependency>
   <groupId>games.rednblack.hyperlap2d</groupId>
   <artifactId>libgdx-talos-extension</artifactId>
-  <version>0.0.5</version>
+  <version>0.0.6</version>
   <type>pom</type>
 </dependency>
 ```
@@ -30,7 +30,7 @@ dependencies {
 
 | HyperLap2D         | Talos              |
 | ------------------ | ------------------ |
-| 0.0.6-SNAPSHOT     | 1.3.1              |
+| 0.0.6              | 1.3.1              |
 | 0.0.5              | 1.3.1              |
 
 ### License
