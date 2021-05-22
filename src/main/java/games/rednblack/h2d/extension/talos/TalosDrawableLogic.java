@@ -29,7 +29,7 @@ public class TalosDrawableLogic implements Drawable {
     }
 
     @Override
-    public void draw(Batch batch, Entity entity, float parentAlpha, boolean normal) {
+    public void draw(Batch batch, Entity entity, float parentAlpha, RenderingType renderingType) {
         tmpColor.set(batch.getColor());
 
         TintComponent tintComponent = tintComponentComponentMapper.get(entity);
