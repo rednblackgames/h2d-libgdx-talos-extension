@@ -26,7 +26,7 @@ import games.rednblack.editor.renderer.resources.IResourceRetriever;
 import java.io.File;
 
 public class TalosComponentFactory extends ComponentFactory {
-    AtlasAssetProvider assetProvider;
+    ResourceRetrieverAssetProvider assetProvider;
 
     public TalosComponentFactory() {
         super();
@@ -68,7 +68,7 @@ public class TalosComponentFactory extends ComponentFactory {
     private FileHandle talosToLoad;
 
     protected TalosComponent createParticleComponent(Entity entity, TalosVO vo) {
-        assetProvider = new AtlasAssetProvider(rm.getMainPack());
+        assetProvider = new ResourceRetrieverAssetProvider(rm);
         assetProvider.setAssetHandler(ShaderDescriptor.class, new BaseAssetProvider.AssetHandler<ShaderDescriptor>() {
             @Override
             public ShaderDescriptor findAsset(String assetName) {
