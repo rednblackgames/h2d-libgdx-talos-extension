@@ -1,23 +1,19 @@
 package games.rednblack.h2d.extension.talos;
 
-import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
+import com.artemis.ComponentMapper;
+import com.artemis.annotations.All;
+import com.artemis.systems.IteratingSystem;
 import games.rednblack.editor.renderer.components.particle.TalosDataComponent;
 
+@All({TalosComponent.class, TalosDataComponent.class})
 public class TalosSystem extends IteratingSystem {
-    protected final ComponentMapper<TalosComponent> particleComponentMapper = ComponentMapper.getFor(TalosComponent.class);
-
-    public TalosSystem() {
-        super(Family.all(TalosComponent.class, TalosDataComponent.class).get());
-    }
+    protected ComponentMapper<TalosComponent> particleComponentMapper;
 
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
+    protected void process(int entity) {
         TalosComponent talosComponent = particleComponentMapper.get(entity);
 
-        talosComponent.effect.update(deltaTime);
+        talosComponent.effect.update(world.getDelta());
     }
 }
 

@@ -1,9 +1,9 @@
 package games.rednblack.h2d.extension.talos;
 
+import com.artemis.PooledComponent;
 import com.talosvfx.talos.runtime.ParticleEffectInstance;
-import games.rednblack.editor.renderer.components.BaseComponent;
 
-public class TalosComponent implements BaseComponent {
+public class TalosComponent extends PooledComponent {
     public ParticleEffectInstance effect = null;
 
     @Override

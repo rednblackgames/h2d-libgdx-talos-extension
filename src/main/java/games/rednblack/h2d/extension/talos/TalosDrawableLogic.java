@@ -1,7 +1,6 @@
 package games.rednblack.h2d.extension.talos;
 
-import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.Entity;
+import com.artemis.ComponentMapper;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -18,9 +17,12 @@ import games.rednblack.editor.renderer.utils.TransformMathUtils;
 
 public class TalosDrawableLogic implements Drawable {
 
-    private final ComponentMapper<TalosComponent> particleComponentMapper = ComponentMapper.getFor(TalosComponent.class);
-    private final ComponentMapper<TalosDataComponent> dataComponentMapper = ComponentMapper.getFor(TalosDataComponent.class);
-    private final ComponentMapper<TintComponent> tintComponentComponentMapper = ComponentMapper.getFor(TintComponent.class);
+    protected ComponentMapper<TalosComponent> particleComponentMapper;
+    protected ComponentMapper<TalosDataComponent> dataComponentMapper;
+    protected ComponentMapper<TintComponent> tintComponentComponentMapper;
+
+    protected com.artemis.World engine;
+
     private final TalosRenderer defaultRenderer = new TalosRenderer();
     private final Color tmpColor = new Color();
 
@@ -29,7 +31,7 @@ public class TalosDrawableLogic implements Drawable {
     }
 
     @Override
-    public void draw(Batch batch, Entity entity, float parentAlpha, RenderingType renderingType) {
+    public void draw(Batch batch, int entity, float parentAlpha, RenderingType renderingType) {
         tmpColor.set(batch.getColor());
 
         TintComponent tintComponent = tintComponentComponentMapper.get(entity);
@@ -39,11 +41,11 @@ public class TalosDrawableLogic implements Drawable {
 
         TalosDataComponent dataComponent = dataComponentMapper.get(entity);
         TalosComponent talosComponent = particleComponentMapper.get(entity);
-        TransformComponent transformComponent = ComponentRetriever.get(entity, TransformComponent.class);
+        TransformComponent transformComponent = ComponentRetriever.get(entity, TransformComponent.class, engine);
 
         if (dataComponent.transform) {
-            TransformMathUtils.computeTransform(entity).mulLeft(batch.getTransformMatrix());
-            TransformMathUtils.applyTransform(entity, batch);
+            TransformMathUtils.computeTransform(entity, engine).mulLeft(batch.getTransformMatrix());
+            TransformMathUtils.applyTransform(entity, batch, engine);
         } else {
             talosComponent.effect.setPosition(transformComponent.x, transformComponent.y);
         }
@@ -51,7 +53,7 @@ public class TalosDrawableLogic implements Drawable {
         talosComponent.effect.render(defaultRenderer);
 
         if (dataComponent.transform) {
-            TransformMathUtils.resetTransform(entity, batch);
+            TransformMathUtils.resetTransform(entity, batch, engine);
         }
 
         batch.setColor(tmpColor);
