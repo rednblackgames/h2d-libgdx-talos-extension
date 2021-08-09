@@ -12,7 +12,6 @@ import games.rednblack.editor.renderer.components.TintComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
 import games.rednblack.editor.renderer.components.particle.TalosDataComponent;
 import games.rednblack.editor.renderer.systems.render.logic.Drawable;
-import games.rednblack.editor.renderer.utils.ComponentRetriever;
 import games.rednblack.editor.renderer.utils.TransformMathUtils;
 
 public class TalosDrawableLogic implements Drawable {
@@ -20,6 +19,7 @@ public class TalosDrawableLogic implements Drawable {
     protected ComponentMapper<TalosComponent> particleComponentMapper;
     protected ComponentMapper<TalosDataComponent> dataComponentMapper;
     protected ComponentMapper<TintComponent> tintComponentComponentMapper;
+    protected ComponentMapper<TransformComponent> transformComponentMapper;
 
     protected com.artemis.World engine;
 
@@ -41,11 +41,11 @@ public class TalosDrawableLogic implements Drawable {
 
         TalosDataComponent dataComponent = dataComponentMapper.get(entity);
         TalosComponent talosComponent = particleComponentMapper.get(entity);
-        TransformComponent transformComponent = ComponentRetriever.get(entity, TransformComponent.class, engine);
+        TransformComponent transformComponent = transformComponentMapper.get(entity);
 
         if (dataComponent.transform) {
-            TransformMathUtils.computeTransform(entity, engine).mulLeft(batch.getTransformMatrix());
-            TransformMathUtils.applyTransform(entity, batch, engine);
+            TransformMathUtils.computeTransform(transformComponent).mulLeft(batch.getTransformMatrix());
+            TransformMathUtils.applyTransform(batch, transformComponent);
         } else {
             talosComponent.effect.setPosition(transformComponent.x, transformComponent.y);
         }
@@ -53,7 +53,7 @@ public class TalosDrawableLogic implements Drawable {
         talosComponent.effect.render(defaultRenderer);
 
         if (dataComponent.transform) {
-            TransformMathUtils.resetTransform(entity, batch, engine);
+            TransformMathUtils.resetTransform(batch, transformComponent);
         }
 
         batch.setColor(tmpColor);
