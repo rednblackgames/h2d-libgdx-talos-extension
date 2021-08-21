@@ -1,6 +1,6 @@
 ## HyperLap2D libGDX Talos Extension
 
-HyperLap2D extension for libgdx runtime that adds Talos rendering support.
+HyperLap2D extension for libgdx runtime that adds [Talos](https://talosvfx.com) rendering support.
 
 ### Integration
 
