@@ -11,10 +11,10 @@ import com.talosvfx.talos.runtime.render.ParticleRenderer;
 import games.rednblack.editor.renderer.components.TintComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
 import games.rednblack.editor.renderer.components.particle.TalosDataComponent;
-import games.rednblack.editor.renderer.systems.render.logic.Drawable;
+import games.rednblack.editor.renderer.systems.render.logic.DrawableLogic;
 import games.rednblack.editor.renderer.utils.TransformMathUtils;
 
-public class TalosDrawableLogic implements Drawable {
+public class TalosDrawableLogic implements DrawableLogic {
 
     protected ComponentMapper<TalosComponent> particleComponentMapper;
     protected ComponentMapper<TalosDataComponent> dataComponentMapper;
