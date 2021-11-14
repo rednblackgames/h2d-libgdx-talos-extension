@@ -4,7 +4,7 @@ import com.artemis.PooledComponent;
 import com.talosvfx.talos.runtime.ParticleEffectInstance;
 
 public class TalosComponent extends PooledComponent {
-    public ParticleEffectInstance effect = null;
+    public transient ParticleEffectInstance effect = null;
 
     @Override
     public void reset() {
