@@ -12,11 +12,13 @@ import games.rednblack.editor.renderer.utils.ComponentRetriever;
 public class TalosItemType implements IExternalItemType {
 
     private ComponentFactory factory;
+    private ComponentFactoryV2 factoryV2;
     private IteratingSystem system;
     private DrawableLogic drawableLogic;
 
     public TalosItemType() {
         factory = new TalosComponentFactory();
+        factoryV2 = new TalosComponentFactoryV2();
         system = new TalosSystem();
         drawableLogic = new TalosDrawableLogic();
     }
@@ -42,7 +44,7 @@ public class TalosItemType implements IExternalItemType {
 
     @Override
     public ComponentFactoryV2 getComponentFactoryV2() {
-        return new TalosComponentFactoryV2();
+        return factoryV2;
     }
 
     @Override
