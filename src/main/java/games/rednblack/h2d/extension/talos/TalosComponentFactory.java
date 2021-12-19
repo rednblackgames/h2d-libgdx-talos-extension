@@ -15,23 +15,25 @@ import com.talosvfx.talos.runtime.utils.VectorField;
 import games.rednblack.editor.renderer.box2dLight.RayHandler;
 import games.rednblack.editor.renderer.components.BoundingBoxComponent;
 import games.rednblack.editor.renderer.components.DimensionsComponent;
-import games.rednblack.editor.renderer.components.ParentNodeComponent;
 import games.rednblack.editor.renderer.components.particle.TalosDataComponent;
 import games.rednblack.editor.renderer.data.MainItemVO;
 import games.rednblack.editor.renderer.data.ProjectInfoVO;
 import games.rednblack.editor.renderer.data.TalosVO;
-import games.rednblack.editor.renderer.factory.EntityFactory;
 import games.rednblack.editor.renderer.factory.component.ComponentFactory;
+import games.rednblack.editor.renderer.factory.EntityFactory;
 import games.rednblack.editor.renderer.resources.IResourceRetriever;
 
 import java.io.File;
 
 public class TalosComponentFactory extends ComponentFactory {
+
     protected ComponentMapper<TalosComponent> talosCM;
     protected ComponentMapper<TalosDataComponent> talosDataCM;
 
     private FileHandle talosToLoad;
     private EntityTransmuter transmuter;
+
+    private ResourceRetrieverAssetProvider assetProvider;
 
     public TalosComponentFactory() {
         super();
@@ -42,36 +44,12 @@ public class TalosComponentFactory extends ComponentFactory {
         super.injectDependencies(engine, rayHandler, world, rm);
 
         transmuter = new EntityTransmuterFactory(engine)
-                .add(ParentNodeComponent.class)
                 .add(TalosComponent.class)
                 .add(TalosDataComponent.class)
                 .remove(BoundingBoxComponent.class)
                 .build();
-    }
 
-    @Override
-    public int createSpecialisedEntity(int root, MainItemVO vo) {
-        int entity = createGeneralEntity(vo, EntityFactory.TALOS_TYPE);
-        transmuter.transmute(entity);
-
-        adjustNodeHierarchy(root, entity);
-        createDataComponent(entity, (TalosVO) vo);
-        createParticleComponent(entity, (TalosVO) vo);
-
-        return entity;
-    }
-
-    @Override
-    protected void initializeDimensionsComponent(int entity, DimensionsComponent component, MainItemVO vo) {
-        ProjectInfoVO projectInfoVO = rm.getProjectVO();
-        float boundBoxSize = 70f;
-        component.boundBox = new Rectangle((-boundBoxSize / 2f) / projectInfoVO.pixelToWorld, (-boundBoxSize / 2f) / projectInfoVO.pixelToWorld, boundBoxSize / projectInfoVO.pixelToWorld, boundBoxSize / projectInfoVO.pixelToWorld);
-        component.width = boundBoxSize / projectInfoVO.pixelToWorld;
-        component.height = boundBoxSize / projectInfoVO.pixelToWorld;
-    }
-
-    protected TalosComponent createParticleComponent(int entity, TalosVO vo) {
-        ResourceRetrieverAssetProvider assetProvider = new ResourceRetrieverAssetProvider(rm);
+        assetProvider = new ResourceRetrieverAssetProvider(rm);
         assetProvider.setAssetHandler(ShaderDescriptor.class, new BaseAssetProvider.AssetHandler<ShaderDescriptor>() {
             @Override
             public ShaderDescriptor findAsset(String assetName) {
@@ -84,23 +62,47 @@ public class TalosComponentFactory extends ComponentFactory {
                 return findVectorFieldDescriptorOnLoad(assetName);
             }
         });
+    }
 
+    @Override
+    public void transmuteEntity(int entity) {
+        transmuter.transmute(entity);
+    }
+
+    @Override
+    public int getEntityType() {
+        return EntityFactory.TALOS_TYPE;
+    }
+
+    @Override
+    public void setInitialData(int entity, Object data) {
+        talosDataCM.get(entity).particleName = (String) data;
+    }
+
+    @Override
+    public Class<TalosVO> getVOType() {
+        return TalosVO.class;
+    }
+
+    @Override
+    public void initializeSpecialComponentsFromVO(int entity, MainItemVO voG) {
+        TalosVO vo = (TalosVO) voG;
+        TalosDataComponent talosDataComponent = talosDataCM.get(entity);
+        talosDataComponent.particleName = vo.particleName;
+        talosDataComponent.transform = vo.transform;
+    }
+
+    @Override
+    protected void initializeTransientComponents(int entity) {
+        super.initializeTransientComponents(entity);
+
+        TalosDataComponent data = talosDataCM.get(entity);
         TalosComponent component = talosCM.get(entity);
         ParticleEffectDescriptor effectDescriptor = new ParticleEffectDescriptor();
         effectDescriptor.setAssetProvider(assetProvider);
-        talosToLoad = rm.getTalosVFX(vo.particleName);
+        talosToLoad = rm.getTalosVFX(data.particleName);
         effectDescriptor.load(talosToLoad);
         component.effect = effectDescriptor.createEffectInstance();
-
-        return component;
-    }
-
-    protected TalosDataComponent createDataComponent(int entity, TalosVO vo) {
-        TalosDataComponent dataComponent = talosDataCM.get(entity);
-        dataComponent.particleName = vo.particleName;
-        dataComponent.transform = vo.transform;
-
-        return dataComponent;
     }
 
     private ObjectMap<String, ShaderDescriptor> shaderDescriptorObjectMap = new ObjectMap<>();
@@ -130,5 +132,15 @@ public class TalosComponentFactory extends ComponentFactory {
             }
         }
         return asset;
+    }
+
+    @Override
+    protected void initializeDimensionsComponent(int entity) {
+        DimensionsComponent component = dimensionsCM.get(entity);
+        ProjectInfoVO projectInfoVO = rm.getProjectVO();
+        float boundBoxSize = 70f;
+        component.boundBox = new Rectangle((-boundBoxSize / 2f) / projectInfoVO.pixelToWorld, (-boundBoxSize / 2f) / projectInfoVO.pixelToWorld, boundBoxSize / projectInfoVO.pixelToWorld, boundBoxSize / projectInfoVO.pixelToWorld);
+        component.width = boundBoxSize / projectInfoVO.pixelToWorld;
+        component.height = boundBoxSize / projectInfoVO.pixelToWorld;
     }
 }
