@@ -15,12 +15,9 @@ import com.talosvfx.talos.runtime.utils.VectorField;
 import games.rednblack.editor.renderer.box2dLight.RayHandler;
 import games.rednblack.editor.renderer.components.BoundingBoxComponent;
 import games.rednblack.editor.renderer.components.DimensionsComponent;
-import games.rednblack.editor.renderer.components.particle.TalosDataComponent;
 import games.rednblack.editor.renderer.data.MainItemVO;
 import games.rednblack.editor.renderer.data.ProjectInfoVO;
-import games.rednblack.editor.renderer.data.TalosVO;
 import games.rednblack.editor.renderer.factory.component.ComponentFactory;
-import games.rednblack.editor.renderer.factory.EntityFactory;
 import games.rednblack.editor.renderer.resources.IResourceRetriever;
 
 import java.io.File;
@@ -28,7 +25,6 @@ import java.io.File;
 public class TalosComponentFactory extends ComponentFactory {
 
     protected ComponentMapper<TalosComponent> talosCM;
-    protected ComponentMapper<TalosDataComponent> talosDataCM;
 
     private FileHandle talosToLoad;
     private EntityTransmuter transmuter;
@@ -45,7 +41,6 @@ public class TalosComponentFactory extends ComponentFactory {
 
         transmuter = new EntityTransmuterFactory(engine)
                 .add(TalosComponent.class)
-                .add(TalosDataComponent.class)
                 .remove(BoundingBoxComponent.class)
                 .build();
 
@@ -71,12 +66,12 @@ public class TalosComponentFactory extends ComponentFactory {
 
     @Override
     public int getEntityType() {
-        return EntityFactory.TALOS_TYPE;
+        return TalosItemType.TALOS_TYPE;
     }
 
     @Override
     public void setInitialData(int entity, Object data) {
-        talosDataCM.get(entity).particleName = (String) data;
+        talosCM.get(entity).particleName = (String) data;
     }
 
     @Override
@@ -87,20 +82,19 @@ public class TalosComponentFactory extends ComponentFactory {
     @Override
     public void initializeSpecialComponentsFromVO(int entity, MainItemVO voG) {
         TalosVO vo = (TalosVO) voG;
-        TalosDataComponent talosDataComponent = talosDataCM.get(entity);
-        talosDataComponent.particleName = vo.particleName;
-        talosDataComponent.transform = vo.transform;
+        TalosComponent talosComponent = talosCM.get(entity);
+        talosComponent.particleName = vo.particleName;
+        talosComponent.transform = vo.transform;
     }
 
     @Override
     protected void initializeTransientComponents(int entity) {
         super.initializeTransientComponents(entity);
 
-        TalosDataComponent data = talosDataCM.get(entity);
         TalosComponent component = talosCM.get(entity);
         ParticleEffectDescriptor effectDescriptor = new ParticleEffectDescriptor();
         effectDescriptor.setAssetProvider(assetProvider);
-        talosToLoad = rm.getTalosVFX(data.particleName);
+        talosToLoad = rm.getExternalItemType(getEntityType(), component.particleName);
         effectDescriptor.load(talosToLoad);
         component.effect = effectDescriptor.createEffectInstance();
     }
