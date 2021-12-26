@@ -10,14 +10,12 @@ import com.talosvfx.talos.runtime.ParticleEffectInstance;
 import com.talosvfx.talos.runtime.render.ParticleRenderer;
 import games.rednblack.editor.renderer.components.TintComponent;
 import games.rednblack.editor.renderer.components.TransformComponent;
-import games.rednblack.editor.renderer.components.particle.TalosDataComponent;
 import games.rednblack.editor.renderer.systems.render.logic.DrawableLogic;
 import games.rednblack.editor.renderer.utils.TransformMathUtils;
 
 public class TalosDrawableLogic implements DrawableLogic {
 
-    protected ComponentMapper<TalosComponent> particleComponentMapper;
-    protected ComponentMapper<TalosDataComponent> dataComponentMapper;
+    protected ComponentMapper<TalosComponent> talosComponentMapper;
     protected ComponentMapper<TintComponent> tintComponentComponentMapper;
     protected ComponentMapper<TransformComponent> transformComponentMapper;
 
@@ -39,11 +37,10 @@ public class TalosDrawableLogic implements DrawableLogic {
         defaultRenderer.setBatch(batch);
         defaultRenderer.setEntityColor(tintComponent.color, parentAlpha);
 
-        TalosDataComponent dataComponent = dataComponentMapper.get(entity);
-        TalosComponent talosComponent = particleComponentMapper.get(entity);
+        TalosComponent talosComponent = talosComponentMapper.get(entity);
         TransformComponent transformComponent = transformComponentMapper.get(entity);
 
-        if (dataComponent.transform) {
+        if (talosComponent.transform) {
             TransformMathUtils.computeTransform(transformComponent).mulLeft(batch.getTransformMatrix());
             TransformMathUtils.applyTransform(batch, transformComponent);
         } else {
@@ -52,7 +49,7 @@ public class TalosDrawableLogic implements DrawableLogic {
 
         talosComponent.effect.render(defaultRenderer);
 
-        if (dataComponent.transform) {
+        if (talosComponent.transform) {
             TransformMathUtils.resetTransform(batch, transformComponent);
         }
 
