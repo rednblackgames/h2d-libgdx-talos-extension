@@ -3,15 +3,9 @@ package games.rednblack.h2d.extension.talos;
 import com.artemis.ComponentMapper;
 import com.artemis.EntityTransmuter;
 import com.artemis.EntityTransmuterFactory;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.talosvfx.talos.runtime.ParticleEffectDescriptor;
-import com.talosvfx.talos.runtime.assets.BaseAssetProvider;
-import com.talosvfx.talos.runtime.utils.ShaderDescriptor;
-import com.talosvfx.talos.runtime.utils.VectorField;
 import games.rednblack.editor.renderer.box2dLight.RayHandler;
 import games.rednblack.editor.renderer.components.BoundingBoxComponent;
 import games.rednblack.editor.renderer.components.DimensionsComponent;
@@ -20,16 +14,11 @@ import games.rednblack.editor.renderer.data.ProjectInfoVO;
 import games.rednblack.editor.renderer.factory.component.ComponentFactory;
 import games.rednblack.editor.renderer.resources.IResourceRetriever;
 
-import java.io.File;
-
 public class TalosComponentFactory extends ComponentFactory {
 
     protected ComponentMapper<TalosComponent> talosCM;
 
-    private FileHandle talosToLoad;
     private EntityTransmuter transmuter;
-
-    private ResourceRetrieverAssetProvider assetProvider;
 
     public TalosComponentFactory() {
         super();
@@ -43,20 +32,6 @@ public class TalosComponentFactory extends ComponentFactory {
                 .add(TalosComponent.class)
                 .remove(BoundingBoxComponent.class)
                 .build();
-
-        assetProvider = new ResourceRetrieverAssetProvider(rm);
-        assetProvider.setAssetHandler(ShaderDescriptor.class, new BaseAssetProvider.AssetHandler<ShaderDescriptor>() {
-            @Override
-            public ShaderDescriptor findAsset(String assetName) {
-                return findShaderDescriptorOnLoad(assetName);
-            }
-        });
-        assetProvider.setAssetHandler(VectorField.class, new BaseAssetProvider.AssetHandler<VectorField>() {
-            @Override
-            public VectorField findAsset(String assetName) {
-                return findVectorFieldDescriptorOnLoad(assetName);
-            }
-        });
     }
 
     @Override
@@ -92,40 +67,8 @@ public class TalosComponentFactory extends ComponentFactory {
         super.initializeTransientComponents(entity);
 
         TalosComponent component = talosCM.get(entity);
-        ParticleEffectDescriptor effectDescriptor = new ParticleEffectDescriptor();
-        effectDescriptor.setAssetProvider(assetProvider);
-        talosToLoad = rm.getExternalItemType(getEntityType(), component.particleName);
-        effectDescriptor.load(talosToLoad);
+        ParticleEffectDescriptor effectDescriptor = (ParticleEffectDescriptor) rm.getExternalItemType(getEntityType(), component.particleName);
         component.effect = effectDescriptor.createEffectInstance();
-    }
-
-    private ObjectMap<String, ShaderDescriptor> shaderDescriptorObjectMap = new ObjectMap<>();
-    private ShaderDescriptor findShaderDescriptorOnLoad (String assetName) {
-        ShaderDescriptor asset = shaderDescriptorObjectMap.get(assetName);
-        if (asset == null) {
-            String path = talosToLoad.parent().path() + File.separator + assetName;
-            final FileHandle file = Gdx.files.internal(path);
-
-            asset = new ShaderDescriptor();
-            if (file.exists()) {
-                asset.setData(file.readString());
-            }
-        }
-        return asset;
-    }
-
-    private ObjectMap<String, VectorField> vectorFieldDescriptorObjectMap = new ObjectMap<>();
-    private VectorField findVectorFieldDescriptorOnLoad (String assetName) {
-        VectorField asset = vectorFieldDescriptorObjectMap.get(assetName);
-        if (asset == null) {
-            final FileHandle file = new FileHandle(talosToLoad.parent().path() + File.separator + assetName + ".fga");
-
-            asset = new VectorField();
-            if (file.exists()) {
-                asset.setBakedData(file);
-            }
-        }
-        return asset;
     }
 
     @Override
