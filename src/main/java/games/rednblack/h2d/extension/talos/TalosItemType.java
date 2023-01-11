@@ -97,6 +97,11 @@ public class TalosItemType implements IExternalItemType {
 
     @Override
     public void loadExternalTypesAsync(IResourceRetriever rm, ObjectSet<String> assetsToLoad, HashMap<String, Object> assets) {
+
+    }
+
+    @Override
+    public void loadExternalTypesSync(IResourceRetriever rm, ObjectSet<String> assetsToLoad, HashMap<String, Object> assets) {
         assetProvider = new ResourceRetrieverAssetProvider(rm);
         assetProvider.setAssetHandler(ShaderDescriptor.class, new BaseAssetProvider.AssetHandler<ShaderDescriptor>() {
             @Override
@@ -126,11 +131,6 @@ public class TalosItemType implements IExternalItemType {
 
             assets.put(name, effectDescriptor);
         }
-    }
-
-    @Override
-    public void loadExternalTypesSync(IResourceRetriever rm, ObjectSet<String> assetsToLoad, HashMap<String, Object> assets) {
-
     }
 
     public String formatResourcePath(String resName) {
