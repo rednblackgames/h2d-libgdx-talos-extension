@@ -56,6 +56,16 @@ public class TalosDrawableLogic implements DrawableLogic {
         batch.setColor(tmpColor);
     }
 
+    @Override
+    public void beginPipeline() {
+
+    }
+
+    @Override
+    public void endPipeline() {
+
+    }
+
     private static class TalosRenderer implements ParticleRenderer {
         private final Color entityColor = new Color();
         private Batch batch;
