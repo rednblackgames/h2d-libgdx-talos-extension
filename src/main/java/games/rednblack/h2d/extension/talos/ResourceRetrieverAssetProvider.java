@@ -3,7 +3,7 @@ package games.rednblack.h2d.extension.talos;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.talosvfx.talos.runtime.assets.BaseAssetProvider;
+import games.rednblack.talos.runtime.assets.BaseAssetProvider;
 import games.rednblack.editor.renderer.resources.IResourceRetriever;
 
 public class ResourceRetrieverAssetProvider extends BaseAssetProvider {

@@ -5,6 +5,7 @@ plugins {
 apply from : 'publish.gradle'
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     maven { url 'https://jitpack.io' }
@@ -15,7 +16,7 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
 
     implementation "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
-    implementation "com.talosvfx:talos-libgdx:$talosVersion"
+    implementation "games.rednblack.talos:runtime-libgdx:$talosVersion"
     implementation project(":hyperlap2d-runtime-libgdx")
 }
 

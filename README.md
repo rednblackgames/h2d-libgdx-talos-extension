@@ -2,6 +2,8 @@
 
 HyperLap2D extension for libgdx runtime that adds [Talos](https://talosvfx.com) rendering support.
 
+Currently based on custom [legacy fork](https://github.com/rednblackgames/talos-legacy) to maintain compatibility with v1 features.
+
 ### Integration
 
 #### Gradle
@@ -11,7 +13,7 @@ HyperLap2D extension for libgdx runtime that adds [Talos](https://talosvfx.com) 
 Extension needs to be included into your `core` project.
 ```groovy
 dependencies {
-    api "com.talosvfx:talos-libgdx:$talosVersion"
+    api "games.rednblack.talos:runtime-libgdx:$talosVersion"
     api "games.rednblack.hyperlap2d:libgdx-talos-extension:$h2dTalosExtension"
 }
 ```
@@ -28,10 +30,11 @@ dependencies {
 
 **Talos Runtime compatibility**
 
-| HyperLap2D | Talos              |
-|------------| ------------------ |
-| 0.1.3      | 1.4.0              |
-| 0.1.2      | 1.4.0              |
+| HyperLap2D | Talos          |
+|------------|----------------|
+| 0.1.4      | 1.5.0-SNAPSHOT |
+| 0.1.3      | 1.4.0          |
+| 0.1.2      | 1.4.0          |
 
 ### License
 HyperLap2D's libGDX runtime Talos extension is licensed under the Apache 2.0 License. You can use it free of charge, without limitations both in commercial and non-commercial projects. We love to get (non-mandatory) credit in case you release a game or app using HyperLap2D!
