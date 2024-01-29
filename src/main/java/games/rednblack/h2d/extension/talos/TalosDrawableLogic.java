@@ -79,8 +79,14 @@ public class TalosDrawableLogic implements DrawableLogic {
             this.batch = batch;
         }
 
+        @Override
         public void setBatch (Batch batch) {
             this.batch = batch;
+        }
+
+        @Override
+        public Batch getBatch() {
+            return batch;
         }
 
         public void setEntityColor(Color color, float parentAlpha) {

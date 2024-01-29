@@ -5,7 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectSet;
+import games.rednblack.editor.renderer.resources.ResourceManager;
 import games.rednblack.talos.runtime.ParticleEffectDescriptor;
+import games.rednblack.talos.runtime.ParticleEffectInstancePool;
 import games.rednblack.talos.runtime.assets.BaseAssetProvider;
 import games.rednblack.talos.runtime.utils.ShaderDescriptor;
 import games.rednblack.talos.runtime.utils.VectorField;
@@ -129,7 +131,7 @@ public class TalosItemType implements IExternalItemType {
             talosToLoad = Gdx.files.internal(formatResourcePath(name));
             effectDescriptor.load(talosToLoad);
 
-            assets.put(name, effectDescriptor);
+            assets.put(name, new ParticleEffectInstancePool(effectDescriptor, 1, ResourceManager.PARTICLE_POOL_SIZE));
         }
     }
 

@@ -5,7 +5,6 @@ import com.artemis.EntityTransmuter;
 import com.artemis.EntityTransmuterFactory;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.World;
-import games.rednblack.talos.runtime.ParticleEffectDescriptor;
 import games.rednblack.editor.renderer.box2dLight.RayHandler;
 import games.rednblack.editor.renderer.components.BoundingBoxComponent;
 import games.rednblack.editor.renderer.components.DimensionsComponent;
@@ -13,6 +12,7 @@ import games.rednblack.editor.renderer.data.MainItemVO;
 import games.rednblack.editor.renderer.data.ProjectInfoVO;
 import games.rednblack.editor.renderer.factory.component.ComponentFactory;
 import games.rednblack.editor.renderer.resources.IResourceRetriever;
+import games.rednblack.talos.runtime.ParticleEffectInstancePool;
 
 public class TalosComponentFactory extends ComponentFactory {
 
@@ -67,8 +67,8 @@ public class TalosComponentFactory extends ComponentFactory {
         super.initializeTransientComponents(entity);
 
         TalosComponent component = talosCM.get(entity);
-        ParticleEffectDescriptor effectDescriptor = (ParticleEffectDescriptor) rm.getExternalItemType(getEntityType(), component.particleName);
-        component.effect = effectDescriptor.createEffectInstance();
+        ParticleEffectInstancePool particleEffectInstancePool = (ParticleEffectInstancePool) rm.getExternalItemType(getEntityType(), component.particleName);
+        component.effect = particleEffectInstancePool.obtain();
     }
 
     @Override
