@@ -60,6 +60,7 @@ public class TalosComponentFactory extends ComponentFactory {
         TalosComponent talosComponent = talosCM.get(entity);
         talosComponent.particleName = vo.particleName;
         talosComponent.transform = vo.transform;
+        talosComponent.autoStart = vo.autoStart;
     }
 
     @Override
@@ -69,6 +70,8 @@ public class TalosComponentFactory extends ComponentFactory {
         TalosComponent component = talosCM.get(entity);
         ParticleEffectInstancePool particleEffectInstancePool = (ParticleEffectInstancePool) rm.getExternalItemType(getEntityType(), component.particleName);
         component.effect = particleEffectInstancePool.obtain();
+        if (!component.autoStart)
+            component.effect.pause();
     }
 
     @Override

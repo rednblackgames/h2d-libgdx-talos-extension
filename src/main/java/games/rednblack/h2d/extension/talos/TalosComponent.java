@@ -9,6 +9,7 @@ public class TalosComponent extends PooledComponent {
 
     public String particleName = "";
     public boolean transform = true;
+    public boolean autoStart = true;
 
     @Override
     public void reset() {
@@ -18,5 +19,6 @@ public class TalosComponent extends PooledComponent {
         effect = null;
         particleName = "";
         transform = true;
+        autoStart = true;
     }
 }

@@ -8,6 +8,7 @@ import games.rednblack.editor.renderer.utils.ComponentRetriever;
 public class TalosVO extends MainItemVO {
     public String particleName = "";
     public boolean transform = true;
+    public boolean autoStart = true;
 
     public TalosVO() {
         super();
@@ -17,6 +18,7 @@ public class TalosVO extends MainItemVO {
         super(vo);
         particleName = vo.particleName;
         transform = vo.transform;
+        autoStart = vo.autoStart;
     }
 
     @Override
@@ -26,6 +28,7 @@ public class TalosVO extends MainItemVO {
         TalosComponent talosComponent = ComponentRetriever.get(entity, TalosComponent.class, engine);
         particleName = talosComponent.particleName;
         transform = talosComponent.transform;
+        autoStart = talosComponent.autoStart;
     }
 
     @Override
