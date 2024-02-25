@@ -35,8 +35,6 @@ public class TalosRenderer implements ParticleRenderer {
 
     @Override
     public void render (ParticleEffectInstance particleEffectInstance) {
-        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-
         for (int i = 0; i < particleEffectInstance.getEmitters().size; i++) {
             final IEmitter particleEmitter = particleEffectInstance.getEmitters().get(i);
             if(!particleEmitter.isVisible()) continue;
@@ -46,7 +44,8 @@ public class TalosRenderer implements ParticleRenderer {
                 if (particleEmitter.isAdditive()) {
                     batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
                 } else {
-                    batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+                    batch.setBlendFunctionSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,
+                            GL20.GL_ONE_MINUS_DST_ALPHA, GL20.GL_ONE);
                 }
             }
 
@@ -55,7 +54,8 @@ public class TalosRenderer implements ParticleRenderer {
             }
         }
 
-        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        batch.setBlendFunctionSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,
+                GL20.GL_ONE_MINUS_DST_ALPHA, GL20.GL_ONE);
     }
 
     private void renderParticle (Batch batch, Particle particle, float parentAlpha) {
