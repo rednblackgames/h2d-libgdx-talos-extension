@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to="games.rednblack.h2d.extension.talos">
+    <source path="talos">
+        <include name="**/*"/>
+    </source>
+
+    <extend-configuration-property name="gdx.reflect.include" value="games.rednblack.h2d.extension.talos" />
+    <extend-configuration-property name="artemis.reflect.include" value="games.rednblack.h2d.extension.talos" />
+
+    <extend-configuration-property name="gdx.reflect.include" value="games.rednblack.talos.runtime.serialization" />
+    <extend-configuration-property name="gdx.reflect.include" value="games.rednblack.talos.runtime.modules" />
+</module>
