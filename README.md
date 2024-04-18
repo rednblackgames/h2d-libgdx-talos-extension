@@ -23,18 +23,17 @@ dependencies {
 <dependency>
   <groupId>games.rednblack.hyperlap2d</groupId>
   <artifactId>libgdx-talos-extension</artifactId>
-  <version>0.1.3</version>
+  <version>0.1.4</version>
   <type>pom</type>
 </dependency>
 ```
 
 **Talos Runtime compatibility**
 
-| HyperLap2D | Talos          |
-|------------|----------------|
-| 0.1.4      | 1.5.0-SNAPSHOT |
-| 0.1.3      | 1.4.0          |
-| 0.1.2      | 1.4.0          |
+| HyperLap2D     | Talos  |
+|----------------|--------|
+| 0.1.5-SNAPSHOT | 1.5.0  |
+| 0.1.4          | 1.5.0  |
 
 ### License
 HyperLap2D's libGDX runtime Talos extension is licensed under the Apache 2.0 License. You can use it free of charge, without limitations both in commercial and non-commercial projects. We love to get (non-mandatory) credit in case you release a game or app using HyperLap2D!
