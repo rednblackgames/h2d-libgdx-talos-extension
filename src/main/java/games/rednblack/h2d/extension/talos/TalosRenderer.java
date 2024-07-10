@@ -53,9 +53,6 @@ public class TalosRenderer implements ParticleRenderer {
                 renderParticle(batch, particleEmitter.getActiveParticles().get(j), particleEffectInstance.alpha * entityColor.a);
             }
         }
-
-        batch.setBlendFunctionSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,
-                GL20.GL_ONE_MINUS_DST_ALPHA, GL20.GL_ONE);
     }
 
     private void renderParticle (Batch batch, Particle particle, float parentAlpha) {
