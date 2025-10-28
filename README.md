@@ -8,7 +8,7 @@ Currently based on custom [legacy fork](https://github.com/rednblackgames/talos-
 
 #### Gradle
 ![maven-central](https://img.shields.io/maven-central/v/games.rednblack.hyperlap2d/libgdx-talos-extension?color=blue&label=release)
-![sonatype-nexus](https://img.shields.io/nexus/s/games.rednblack.hyperlap2d/libgdx-talos-extension?label=sanapshot&server=https%3A%2F%2Foss.sonatype.org)
+![sonatype-nexus](https://img.shields.io/maven-metadata/v?label=snapshot&metadataUrl=https%3A%2F%2Fcentral.sonatype.com%2Frepository%2Fmaven-snapshots%2Fgames%2Frednblack%2Fhyperlap2d%2Flibgdx-talos-extension%2Fmaven-metadata.xml)
 
 Extension needs to be included into your `core` project.
 ```groovy
@@ -23,17 +23,18 @@ dependencies {
 <dependency>
   <groupId>games.rednblack.hyperlap2d</groupId>
   <artifactId>libgdx-talos-extension</artifactId>
-  <version>0.1.5</version>
+  <version>0.1.6</version>
   <type>pom</type>
 </dependency>
 ```
 
 **Talos Runtime compatibility**
 
-| HyperLap2D | Talos   |
-|------------|---------|
-| 0.1.5      | 1.5.1   |
-| 0.1.4      | 1.5.0   |
+| HyperLap2D | Talos |
+|------------|-------|
+| 0.1.6      | 1.5.2 |
+| 0.1.5      | 1.5.1 |
+| 0.1.4      | 1.5.0 |
 
 ### License
 HyperLap2D's libGDX runtime Talos extension is licensed under the Apache 2.0 License. You can use it free of charge, without limitations both in commercial and non-commercial projects. We love to get (non-mandatory) credit in case you release a game or app using HyperLap2D!
