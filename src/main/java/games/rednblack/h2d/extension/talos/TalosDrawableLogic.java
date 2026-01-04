@@ -1,6 +1,6 @@
 package games.rednblack.h2d.extension.talos;
 
-import com.artemis.ComponentMapper;
+import games.rednblack.editor.renderer.ecs.ComponentMapper;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import games.rednblack.editor.renderer.components.TintComponent;

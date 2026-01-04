@@ -1,6 +1,6 @@
 package games.rednblack.h2d.extension.talos;
 
-import com.artemis.PooledComponent;
+import games.rednblack.editor.renderer.ecs.PooledComponent;
 import games.rednblack.talos.runtime.ParticleEffectInstance;
 import games.rednblack.talos.runtime.ParticleEffectInstancePool;
 

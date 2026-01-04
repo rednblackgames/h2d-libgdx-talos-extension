@@ -15,7 +15,6 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
 
-    implementation "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
     implementation "games.rednblack.talos:runtime-libgdx:$talosVersion"
     implementation project(":hyperlap2d-runtime-libgdx")
 }

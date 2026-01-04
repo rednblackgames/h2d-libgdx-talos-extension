@@ -1,8 +1,8 @@
 package games.rednblack.h2d.extension.talos;
 
-import com.artemis.ComponentMapper;
-import com.artemis.annotations.All;
-import com.artemis.systems.IteratingSystem;
+import games.rednblack.editor.renderer.ecs.ComponentMapper;
+import games.rednblack.editor.renderer.ecs.annotations.All;
+import games.rednblack.editor.renderer.ecs.systems.IteratingSystem;
 
 @All({TalosComponent.class})
 public class TalosSystem extends IteratingSystem {
@@ -12,7 +12,7 @@ public class TalosSystem extends IteratingSystem {
     protected void process(int entity) {
         TalosComponent talosComponent = particleComponentMapper.get(entity);
 
-        talosComponent.effect.update(world.getDelta());
+        talosComponent.effect.update(engine.getDelta());
     }
 }
 

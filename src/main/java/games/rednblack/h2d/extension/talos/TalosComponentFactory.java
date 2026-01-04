@@ -1,8 +1,9 @@
 package games.rednblack.h2d.extension.talos;
 
-import com.artemis.ComponentMapper;
-import com.artemis.EntityTransmuter;
-import com.artemis.EntityTransmuterFactory;
+import games.rednblack.editor.renderer.ecs.ComponentMapper;
+import games.rednblack.editor.renderer.ecs.Engine;
+import games.rednblack.editor.renderer.ecs.EntityTransmuter;
+import games.rednblack.editor.renderer.ecs.EntityTransmuterFactory;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.World;
 import games.rednblack.editor.renderer.lights.RayHandler;
@@ -25,7 +26,7 @@ public class TalosComponentFactory extends ComponentFactory {
     }
 
     @Override
-    public void injectDependencies(com.artemis.World engine, RayHandler rayHandler, World world, IResourceRetriever rm) {
+    public void injectDependencies(Engine engine, RayHandler rayHandler, World world, IResourceRetriever rm) {
         super.injectDependencies(engine, rayHandler, world, rm);
 
         transmuter = new EntityTransmuterFactory(engine)
