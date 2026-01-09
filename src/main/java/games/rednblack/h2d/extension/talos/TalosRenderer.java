@@ -38,6 +38,7 @@ public class TalosRenderer implements ParticleRenderer {
         for (int i = 0; i < particleEffectInstance.getEmitters().size; i++) {
             final IEmitter particleEmitter = particleEffectInstance.getEmitters().get(i);
             if(!particleEmitter.isVisible()) continue;
+            if (particleEmitter.isComplete()) continue;
             if(particleEmitter.isBlendAdd()) {
                 batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE_MINUS_SRC_ALPHA);
             } else {
@@ -45,7 +46,7 @@ public class TalosRenderer implements ParticleRenderer {
                     batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
                 } else {
                     batch.setBlendFunctionSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,
-                            GL20.GL_ONE_MINUS_DST_ALPHA, GL20.GL_ONE);
+                            GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
                 }
             }
 
