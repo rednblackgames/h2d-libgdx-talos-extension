@@ -61,6 +61,7 @@ public class TalosItemType implements IExternalItemType {
     @Override
     public void injectMappers() {
         ComponentRetriever.addMapper(TalosComponent.class);
+        ComponentRetriever.addMapper(TalosAnchorConstraintComponent.class);
     }
 
     private ObjectMap<String, ShaderDescriptor> shaderDescriptorObjectMap = new ObjectMap<>();

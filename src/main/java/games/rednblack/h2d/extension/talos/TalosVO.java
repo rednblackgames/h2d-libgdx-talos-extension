@@ -9,6 +9,7 @@ public class TalosVO extends MainItemVO {
     public String particleName = "";
     public boolean transform = true;
     public boolean autoStart = true;
+    public TalosAnchorConstraintVO anchorConstraints = null;
 
     public TalosVO() {
         super();
@@ -19,6 +20,8 @@ public class TalosVO extends MainItemVO {
         particleName = vo.particleName;
         transform = vo.transform;
         autoStart = vo.autoStart;
+        if (vo.anchorConstraints != null)
+            anchorConstraints = new TalosAnchorConstraintVO(vo.anchorConstraints);
     }
 
     @Override
@@ -29,6 +32,14 @@ public class TalosVO extends MainItemVO {
         particleName = talosComponent.particleName;
         transform = talosComponent.transform;
         autoStart = talosComponent.autoStart;
+
+        TalosAnchorConstraintComponent anchorComp = ComponentRetriever.get(entity, TalosAnchorConstraintComponent.class, engine);
+        if (anchorComp != null && anchorComp.bindings.size > 0) {
+            anchorConstraints = new TalosAnchorConstraintVO();
+            anchorConstraints.loadFromComponent(anchorComp, engine);
+        } else {
+            anchorConstraints = null;
+        }
     }
 
     @Override

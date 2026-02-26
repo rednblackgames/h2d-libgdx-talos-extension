@@ -18,6 +18,7 @@ import games.rednblack.talos.runtime.ParticleEffectInstancePool;
 public class TalosComponentFactory extends ComponentFactory {
 
     protected ComponentMapper<TalosComponent> talosCM;
+    protected ComponentMapper<TalosAnchorConstraintComponent> anchorCM;
 
     private EntityTransmuter transmuter;
 
@@ -31,6 +32,7 @@ public class TalosComponentFactory extends ComponentFactory {
 
         transmuter = new EntityTransmuterFactory(engine)
                 .add(TalosComponent.class)
+                .add(TalosAnchorConstraintComponent.class)
                 .remove(BoundingBoxComponent.class)
                 .build();
     }
@@ -62,6 +64,21 @@ public class TalosComponentFactory extends ComponentFactory {
         talosComponent.particleName = vo.particleName;
         talosComponent.transform = vo.transform;
         talosComponent.autoStart = vo.autoStart;
+
+        if (vo.anchorConstraints != null && vo.anchorConstraints.bindings != null) {
+            TalosAnchorConstraintComponent anchorComp = anchorCM.get(entity);
+            for (TalosAnchorConstraintVO.AnchorBindingVO bvo : vo.anchorConstraints.bindings) {
+                TalosAnchorConstraintComponent.AnchorBinding ab = new TalosAnchorConstraintComponent.AnchorBinding();
+                ab.scopeKey = bvo.scopeKey;
+                ab.horizontalBias = bvo.horizontalBias;
+                ab.verticalBias = bvo.verticalBias;
+                ab.left = createConstraintData(bvo.left);
+                ab.right = createConstraintData(bvo.right);
+                ab.top = createConstraintData(bvo.top);
+                ab.bottom = createConstraintData(bvo.bottom);
+                anchorComp.bindings.add(ab);
+            }
+        }
     }
 
     @Override
@@ -73,6 +90,21 @@ public class TalosComponentFactory extends ComponentFactory {
         component.effect = particleEffectInstancePool.obtain();
         if (!component.autoStart)
             component.effect.pause();
+    }
+
+    private TalosAnchorConstraintComponent.ConstraintData createConstraintData(TalosAnchorConstraintVO.ConstraintDataVO dataVO) {
+        if (dataVO == null) return null;
+        TalosAnchorConstraintComponent.ConstraintData data = new TalosAnchorConstraintComponent.ConstraintData();
+        data.targetSide = dataVO.targetSide;
+        data.margin = dataVO.margin;
+        if (dataVO.targetUniqueId == null) {
+            data.targetEntity = -1;
+            data.resolved = true;
+        } else {
+            data.targetUniqueId = dataVO.targetUniqueId;
+            data.resolved = false;
+        }
+        return data;
     }
 
     @Override
