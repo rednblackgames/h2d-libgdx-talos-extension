@@ -12,6 +12,7 @@ import games.rednblack.talos.runtime.assets.BaseAssetProvider;
 import games.rednblack.talos.runtime.utils.ShaderDescriptor;
 import games.rednblack.talos.runtime.utils.VectorField;
 import games.rednblack.editor.renderer.commons.IExternalItemType;
+import games.rednblack.editor.renderer.systems.WidgetStateSystem;
 import games.rednblack.editor.renderer.factory.component.ComponentFactory;
 import games.rednblack.editor.renderer.resources.IResourceRetriever;
 import games.rednblack.editor.renderer.systems.render.logic.DrawableLogic;
@@ -56,6 +57,11 @@ public class TalosItemType implements IExternalItemType {
     @Override
     public ComponentFactory getComponentFactory() {
         return factory;
+    }
+
+    @Override
+    public void registerStateOverrideHandlers(WidgetStateSystem system) {
+        TalosStateOverrides.registerAll(system);
     }
 
     @Override

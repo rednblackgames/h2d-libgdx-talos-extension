@@ -65,6 +65,11 @@ public class TalosComponentFactory extends ComponentFactory {
         talosComponent.transform = vo.transform;
         talosComponent.autoStart = vo.autoStart;
 
+        talosComponent.scopeValues.clear();
+        for (TalosVO.ScopeValueVO value : vo.scopeValues) {
+            talosComponent.scopeValues.add(new TalosComponent.ScopeValue(value.key, value.value));
+        }
+
         if (vo.anchorConstraints != null && vo.anchorConstraints.bindings != null) {
             TalosAnchorConstraintComponent anchorComp = anchorCM.get(entity);
             for (TalosAnchorConstraintVO.AnchorBindingVO bvo : vo.anchorConstraints.bindings) {
@@ -88,8 +93,13 @@ public class TalosComponentFactory extends ComponentFactory {
         TalosComponent component = talosCM.get(entity);
         ParticleEffectInstancePool particleEffectInstancePool = (ParticleEffectInstancePool) rm.getExternalItemType(getEntityType(), component.particleName);
         component.effect = particleEffectInstancePool.obtain();
+        // the instance comes from a pool, so whatever the scene says the slots hold has to be pushed in
+        component.applyScopeValues();
         if (!component.autoStart)
             component.effect.pause();
+
+        // a state may reach into any slot the effect reads, and only the effect knows which those are
+        TalosStateOverrides.registerScopeHandlers(engine, component);
     }
 
     private TalosAnchorConstraintComponent.ConstraintData createConstraintData(TalosAnchorConstraintVO.ConstraintDataVO dataVO) {
