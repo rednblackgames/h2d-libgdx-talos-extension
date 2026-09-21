@@ -5,6 +5,13 @@ import com.badlogic.gdx.utils.IntSet;
 import games.rednblack.talos.runtime.IEmitter;
 import games.rednblack.talos.runtime.modules.AbstractModule;
 import games.rednblack.talos.runtime.modules.GlobalScopeModule;
+import games.rednblack.talos.runtime.Slot;
+import games.rednblack.talos.runtime.modules.ColorModule;
+import games.rednblack.talos.runtime.modules.EmitterModule;
+import games.rednblack.talos.runtime.modules.GradientColorModule;
+import games.rednblack.talos.runtime.modules.OffsetModule;
+import games.rednblack.talos.runtime.modules.ParticleModule;
+import com.badlogic.gdx.utils.IntMap;
 import games.rednblack.talos.runtime.values.NumericalValue;
 
 import games.rednblack.editor.renderer.ecs.PooledComponent;
@@ -26,6 +33,26 @@ public class TalosComponent extends PooledComponent {
 
     /** Slots the effect actually reads, worked out once from its graph. */
     private transient IntSet usedScopeKeys = null;
+    /** What each of those slots is used as, worked out in the same pass. */
+    private transient IntMap<ScopeKind> scopeKinds = null;
+
+    /**
+     * What a slot holds, as far as the modules reading it tell: a slot declares nothing itself, so
+     * its shape comes from where its value goes. Anything read by a module that accepts any shape,
+     * or read in two incompatible ways, stays unknown and shows all four numbers.
+     */
+    public enum ScopeKind {
+        NUMBER(1), VECTOR(2), COLOR(4), UNKNOWN(4);
+
+        public final int channels;
+
+        ScopeKind(int channels) {
+            this.channels = channels;
+        }
+    }
+
+    /** Upper bound of the input slot numbers a module declares, all of which are small. */
+    private static final int MAX_INPUT_SLOTS = 64;
 
     /**
      * A slot holds a numerical value, which is up to four numbers: one on its own, two for a
@@ -91,14 +118,7 @@ public class TalosComponent extends PooledComponent {
     /** @return true if a global scope module of the effect reads this slot */
     public boolean usesScopeKey(int key) {
         if (effect == null) return false;
-        if (usedScopeKeys == null) {
-            usedScopeKeys = new IntSet();
-            for (IEmitter emitter : effect.getEmitters()) {
-                for (AbstractModule module : emitter.getEmitterGraph().getModules()) {
-                    if (module instanceof GlobalScopeModule) usedScopeKeys.add(((GlobalScopeModule) module).getKey());
-                }
-            }
-        }
+        inspectScopes();
         return usedScopeKeys.contains(key);
     }
 
@@ -106,10 +126,82 @@ public class TalosComponent extends PooledComponent {
     public Array<Integer> getUsedScopeKeys() {
         Array<Integer> keys = new Array<>();
         if (effect == null) return keys;
-        usesScopeKey(0);
+        inspectScopes();
         for (IntSet.IntSetIterator it = usedScopeKeys.iterator(); it.hasNext; ) keys.add(it.next());
         keys.sort();
         return keys;
+    }
+
+    /** @return what the slot is used as by this effect, unknown when it cannot be told */
+    public ScopeKind getScopeKind(int key) {
+        if (effect == null) return ScopeKind.UNKNOWN;
+        inspectScopes();
+        return scopeKinds.get(key, ScopeKind.UNKNOWN);
+    }
+
+    /**
+     * Finds the slots the effect's global scope modules declare, and what reads each of them. Done
+     * once per effect: the graph does not change while the effect is in use.
+     */
+    private void inspectScopes() {
+        if (usedScopeKeys != null) return;
+        usedScopeKeys = new IntSet();
+        scopeKinds = new IntMap<>();
+
+        for (IEmitter emitter : effect.getEmitters()) {
+            Array<AbstractModule> modules = emitter.getEmitterGraph().getModules();
+            for (AbstractModule module : modules) {
+                if (module instanceof GlobalScopeModule) usedScopeKeys.add(((GlobalScopeModule) module).getKey());
+            }
+
+            // A slot declares no shape: the inputs its value feeds do. Inputs remember what feeds them.
+            for (AbstractModule module : modules) {
+                for (int input = 0; input < MAX_INPUT_SLOTS; input++) {
+                    Slot slot = module.getInputSlot(input);
+                    if (slot == null || !(slot.getTargetModule() instanceof GlobalScopeModule)) continue;
+
+                    int key = ((GlobalScopeModule) slot.getTargetModule()).getKey();
+                    scopeKinds.put(key, combine(scopeKinds.get(key), classify(module, input)));
+                }
+            }
+        }
+    }
+
+    /**
+     * The inputs whose meaning is known, each backed by a typed getter of the module. Everything
+     * else accepts any shape, or is not confirmed, and says nothing.
+     */
+    private static ScopeKind classify(AbstractModule module, int input) {
+        if (module instanceof ParticleModule) {
+            if (input == ParticleModule.COLOR) return ScopeKind.COLOR;
+            if (input == ParticleModule.OFFSET || input == ParticleModule.POSITION || input == ParticleModule.TARGET
+                    || input == ParticleModule.PIVOT || input == ParticleModule.SIZE) return ScopeKind.VECTOR;
+            if (input == ParticleModule.LIFE || input == ParticleModule.TRANSPARENCY || input == ParticleModule.ANGLE
+                    || input == ParticleModule.VELOCITY || input == ParticleModule.ROTATION) return ScopeKind.NUMBER;
+            return ScopeKind.UNKNOWN;
+        }
+        if (module instanceof EmitterModule) {
+            if (input == EmitterModule.DELAY || input == EmitterModule.DURATION || input == EmitterModule.RATE) return ScopeKind.NUMBER;
+            return ScopeKind.UNKNOWN;
+        }
+        if (module instanceof ColorModule) {
+            if (input == ColorModule.R || input == ColorModule.G || input == ColorModule.B) return ScopeKind.NUMBER;
+            return ScopeKind.UNKNOWN;
+        }
+        if (module instanceof GradientColorModule && input == GradientColorModule.ALPHA) return ScopeKind.NUMBER;
+        if (module instanceof OffsetModule && input == OffsetModule.ALPHA) return ScopeKind.NUMBER;
+        return ScopeKind.UNKNOWN;
+    }
+
+    /**
+     * A slot read in two places: a number and a vector are both covered by the vector, but a colour
+     * read as anything else is ambiguous, and so is anything read by a module accepting any shape.
+     */
+    private static ScopeKind combine(ScopeKind seen, ScopeKind read) {
+        if (seen == null || seen == read) return read;
+        if (seen == ScopeKind.UNKNOWN || read == ScopeKind.UNKNOWN) return ScopeKind.UNKNOWN;
+        if (seen == ScopeKind.COLOR || read == ScopeKind.COLOR) return ScopeKind.UNKNOWN;
+        return ScopeKind.VECTOR;
     }
 
     public String particleName = "";
@@ -121,6 +213,7 @@ public class TalosComponent extends PooledComponent {
         scopeValues.clear();
         emitting = true;
         usedScopeKeys = null;
+        scopeKinds = null;
         if (effect instanceof ParticleEffectInstancePool.PooledParticleEffectInstance) {
             ((ParticleEffectInstancePool.PooledParticleEffectInstance) effect).free();
         }

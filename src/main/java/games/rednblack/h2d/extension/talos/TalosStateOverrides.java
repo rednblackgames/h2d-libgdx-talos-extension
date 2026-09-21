@@ -1,10 +1,11 @@
 package games.rednblack.h2d.extension.talos;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.Array;
 import games.rednblack.editor.renderer.ecs.ComponentMapper;
 import games.rednblack.editor.renderer.ecs.Engine;
 import games.rednblack.editor.renderer.systems.WidgetStateSystem;
+import com.badlogic.gdx.graphics.Color;
+import games.rednblack.editor.renderer.widget.ColorPreviewHandler;
 import games.rednblack.editor.renderer.widget.InterpolableOverrideHandler;
 import games.rednblack.editor.renderer.widget.ToggleOverrideHandler;
 import games.rednblack.talos.runtime.IEmitter;
@@ -87,7 +88,7 @@ public final class TalosStateOverrides {
      * single figure, a position and a colour are all the same property, and all four travel together
      * when the slot is animated.
      */
-    public static class TalosScope implements InterpolableOverrideHandler {
+    public static class TalosScope implements InterpolableOverrideHandler, ColorPreviewHandler {
         protected ComponentMapper<TalosComponent> talosCM;
         protected ComponentMapper<TalosAnchorConstraintComponent> anchorCM;
 
@@ -130,6 +131,17 @@ public final class TalosStateOverrides {
                 return;
             }
             set(entity, tmp);
+        }
+
+        /** Only a slot the effect reads as a colour is shown as one. */
+        @Override
+        public boolean toColor(int entity, String value, Color out) {
+            TalosComponent component = talosCM.get(entity);
+            if (component == null || component.getScopeKind(key) != TalosComponent.ScopeKind.COLOR) return false;
+            if (!parseChannels(value, tmp)) return false;
+
+            out.set(tmp[0], tmp[1], tmp[2], tmp[3]);
+            return true;
         }
 
         @Override
